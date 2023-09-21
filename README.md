@@ -19,14 +19,14 @@
 
 <h2 id="started">📌 About</h2>
 
-Página simples que mostra alguns pokémons e seus detalhes.
+Página simples que retorna alguns pokémons e seus detalhes. O projeto foi feito usando as tecnologias ReactJS, Typescript e Styled-Components
 
 <h2 id="started">🚀 Getting started</h2>
 
 <h3>Cloning</h3>
 
 ```bash
-git clone your-project-url-in-github
+git clone https://github.com/Jhonnyrmarques/pokedex.git
 ```
 
 <h3>Starting</h3>
