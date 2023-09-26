@@ -76,4 +76,14 @@ export const PokemonsTypes = styled.span<TypesColorProps>`
     css`
       background: ${props.theme['orange-400']};
     `}
+
+    ${(props) =>
+    props.variant === 'ground' &&
+    css`
+      background: linear-gradient(
+        180deg,
+        rgba(247, 222, 63, 1) 49%,
+        rgba(171, 152, 66, 1) 50%
+      );
+    `}
 `
