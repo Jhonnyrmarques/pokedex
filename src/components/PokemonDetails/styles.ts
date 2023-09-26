@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const Detail = styled.main`
   display: grid;
@@ -139,68 +139,6 @@ export const Bio = styled.main`
     padding: 5px;
     color: white;
   }
-`
-
-interface TypesColorProps {
-  variant?: string
-}
-
-export const PokemonsTypes = styled.h3<TypesColorProps>`
-  width: 4rem;
-  font-size: 12px;
-  text-align: center;
-
-  color: ${(props) => props.theme['gray-900']};
-
-  border-radius: 8px;
-
-  padding: 6px;
-
-  ${(props) =>
-    props.variant === 'grass' &&
-    css`
-      background: ${props.theme['green-400']};
-    `}
-
-  ${(props) =>
-    props.variant === 'poison' &&
-    css`
-      background: ${props.theme['purple-500']};
-    `}
-
-  ${(props) =>
-    props.variant === 'fire' &&
-    css`
-      background: ${props.theme['orange-500']};
-    `}
-
-    ${(props) =>
-    props.variant === 'water' &&
-    css`
-      background: ${props.theme['blue-500']};
-    `}
-
-    ${(props) =>
-    props.variant === 'bug' &&
-    css`
-      background: ${props.theme['green-500']};
-    `}
-
-    ${(props) =>
-    props.variant === 'normal' &&
-    css`
-      background: ${props.theme['gray-400']};
-    `}
-
-    ${(props) =>
-    props.variant === 'flying' &&
-    css`
-      background: linear-gradient(
-        180deg,
-        rgba(61, 199, 239, 1) 49%,
-        rgba(189, 185, 184, 1) 50%
-      );
-    `}
 `
 
 interface BarStatsColor {
