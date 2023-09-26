@@ -32,7 +32,7 @@ interface Pokemon {
   url?: string
   id: number
   images: string
-  abilites: PokemonAbilities[]
+  abilities: PokemonAbilities[]
   types: PokemonTypes[]
   weight: number
   height: number
@@ -42,12 +42,11 @@ interface Pokemon {
 interface PokemonsContextType {
   pokemons: Pokemon[]
   pokemon: Pokemon | null
-  getPokemon: (pokemonId: string) => Promise<void>
+  getPokemon: (pokemonId: string) => Promise<Pokemon>
   fetchPokemons: (query: string) => Promise<void>
 }
 
 interface PokemonsProviderProps {
-  pokemonId?: number
   children: ReactNode
 }
 
@@ -58,37 +57,49 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null)
 
   const fetchPokemons = useCallback(async (query?: string) => {
-    const response = await api.get(`${query ? `pokemon/${query}` : 'pokemon'}`)
+    const response = await api.get('pokemon/?limit=60&offset=0')
 
     let payloadPokemons = []
 
-    if (!query) {
-      const { results } = response.data
+    if (query) {
+      const { id, name, types, images, stats, abilities, weight, height } =
+        await getPokemon(query)
 
+      payloadPokemons = [
+        {
+          id,
+          name,
+          types,
+          abilities,
+          weight,
+          height,
+          images,
+          stats,
+        },
+      ]
+      setPokemons(payloadPokemons)
+    } else {
       payloadPokemons = await Promise.all(
-        results.map(async (pokemon: Pokemon) => {
+        response.data.results.map(async (pokemon: Pokemon) => {
           const response = await api.get(String(pokemon.url))
-          const { id, types, sprites } = response.data
+
+          const { id, name, types, sprites, stats } = response.data
 
           return {
-            name: pokemon.name,
+            name,
             id,
             types,
+            stats,
             images: sprites.other.dream_world.front_default,
           }
         }),
       )
-    } else {
-      const { id, name, types, sprites } = response.data
-      payloadPokemons = [
-        { id, name, types, images: sprites.other.dream_world.front_default },
-      ]
     }
 
     setPokemons(payloadPokemons)
   }, [])
 
-  async function getPokemon(pokemonId?: string) {
+  async function getPokemon(pokemonId?: string): Promise<Pokemon> {
     const response = await api.get(`pokemon/${pokemonId}`)
 
     const { id, name, types, sprites, abilities, weight, height, stats } =
@@ -100,11 +111,22 @@ export function PokemonsProvider({ children }: PokemonsProviderProps) {
       name,
       types,
       images: image,
-      abilites: abilities,
+      abilities,
       weight,
       height,
       stats,
     })
+
+    return {
+      name,
+      id,
+      types,
+      stats,
+      abilities,
+      weight,
+      height,
+      images: sprites.other.dream_world.front_default,
+    }
   }
 
   useEffect(() => {
