@@ -4,6 +4,7 @@ import { PokemonsContext } from '../../contexts/PokemonsContext'
 import * as S from './styles'
 import { Link } from 'react-router-dom'
 import { Header } from '../Header'
+import { PokemonTypes } from '../PokemonTypes'
 
 export function Gallery() {
   const { pokemons } = useContext(PokemonsContext)
@@ -31,9 +32,9 @@ export function Gallery() {
                   <div>
                     {item.types.map((item, i) => {
                       return (
-                        <S.PokemonsTypes variant={item.type.name} key={i}>
+                        <PokemonTypes variant={item.type.name} key={i}>
                           {item.type.name}
-                        </S.PokemonsTypes>
+                        </PokemonTypes>
                       )
                     })}
                   </div>

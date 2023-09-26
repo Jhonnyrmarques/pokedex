@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import charmander from '../../assets/004.png'
 import charmeleon from '../../assets/005.png'
 import charizard from '../../assets/006.png'
+import { PokemonTypes } from '../PokemonTypes'
 
 export function PokemonDetails() {
   const pokemonID = localStorage.getItem('pokemonId')
@@ -47,9 +48,9 @@ export function PokemonDetails() {
           <div className="types-top">
             {pokemon?.types.map((item, i) => {
               return (
-                <S.PokemonsTypes variant={item.type.name} key={i}>
+                <PokemonTypes variant={item.type.name} key={i}>
                   {item.type.name}
-                </S.PokemonsTypes>
+                </PokemonTypes>
               )
             })}
           </div>
@@ -100,7 +101,7 @@ export function PokemonDetails() {
         </div>
         <div className="abilities">
           <h4>Habilidades</h4>
-          {pokemon?.abilites.map((item, i) => {
+          {pokemon?.abilities.map((item, i) => {
             return <span key={i}>{item.ability.name}</span>
           })}
         </div>
