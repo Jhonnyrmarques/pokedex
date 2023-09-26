@@ -3,6 +3,7 @@ import { PokemonsContext } from '../../contexts/PokemonsContext'
 
 import * as S from './styles'
 import { Link } from 'react-router-dom'
+import { Header } from '../Header'
 
 export function Gallery() {
   const { pokemons } = useContext(PokemonsContext)
@@ -12,32 +13,36 @@ export function Gallery() {
   }
 
   return (
-    <S.Container>
-      {pokemons.map((item) => {
-        return (
-          <S.PokemonCard key={item.id} onClick={() => getPokemonId(item.id)}>
-            <Link to="/details">
-              <S.Gallery>
-                <img src={item.images} alt="" />
-                <span className="number">
-                  Nº {item.id.toString().padStart(4, '0')}
-                </span>
-                <h3>{item.name}</h3>
+    <>
+      <Header />
 
-                <div>
-                  {item.types.map((item, i) => {
-                    return (
-                      <S.PokemonsTypes variant={item.type.name} key={i}>
-                        {item.type.name}
-                      </S.PokemonsTypes>
-                    )
-                  })}
-                </div>
-              </S.Gallery>
-            </Link>
-          </S.PokemonCard>
-        )
-      })}
-    </S.Container>
+      <S.Container>
+        {pokemons.map((item) => {
+          return (
+            <S.PokemonCard key={item.id} onClick={() => getPokemonId(item.id)}>
+              <Link to="/details">
+                <S.Gallery>
+                  <img src={item.images} alt="" />
+                  <span className="number">
+                    Nº {item.id.toString().padStart(4, '0')}
+                  </span>
+                  <h3>{item.name}</h3>
+
+                  <div>
+                    {item.types.map((item, i) => {
+                      return (
+                        <S.PokemonsTypes variant={item.type.name} key={i}>
+                          {item.type.name}
+                        </S.PokemonsTypes>
+                      )
+                    })}
+                  </div>
+                </S.Gallery>
+              </Link>
+            </S.PokemonCard>
+          )
+        })}
+      </S.Container>
+    </>
   )
 }
