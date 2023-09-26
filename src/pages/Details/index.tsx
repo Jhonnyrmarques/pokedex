@@ -4,11 +4,9 @@ import { PokemonsProvider } from '../../contexts/PokemonsContext'
 import { PokemonDetails } from '../../components/PokemonDetails'
 
 export function Details() {
-  const pokemonID = localStorage.getItem('pokemonId')
-
   return (
     <Container>
-      <PokemonsProvider pokemonId={Number(pokemonID)}>
+      <PokemonsProvider>
         <PokemonDetails />
       </PokemonsProvider>
     </Container>
