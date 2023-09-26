@@ -17,9 +17,12 @@ export const defaultTheme = {
 
   'purple-500': '#a855f7',
 
+  'orange-400': '#fb923c',
   'orange-500': '#f97316',
 
   'blue-500': '#3b82f6',
 
   'yellow-400': '#facc15',
+
+  'pink-400': '#f472b6',
 } as const
