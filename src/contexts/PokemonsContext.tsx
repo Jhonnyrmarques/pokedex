@@ -1,6 +1,12 @@
-import { ReactNode, createContext, useEffect, useState } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 
-import { api } from '../services/api/api'
+import { api } from '../lib/axios'
 
 interface PokemonTypes {
   type: {
@@ -33,15 +39,11 @@ interface Pokemon {
   stats: PokemonStats[]
 }
 
-interface Request {
-  id: number
-  types: PokemonTypes[]
-  images: []
-}
-
 interface PokemonsContextType {
   pokemons: Pokemon[]
   pokemon: Pokemon | null
+  getPokemon: (pokemonId: string) => Promise<void>
+  fetchPokemons: (query: string) => Promise<void>
 }
 
 interface PokemonsProviderProps {
@@ -51,34 +53,42 @@ interface PokemonsProviderProps {
 
 export const PokemonsContext = createContext({} as PokemonsContextType)
 
-export function PokemonsProvider({
-  children,
-  pokemonId,
-}: PokemonsProviderProps) {
+export function PokemonsProvider({ children }: PokemonsProviderProps) {
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
   const [pokemon, setPokemon] = useState<Pokemon | null>(null)
 
-  async function getAllPokemons() {
-    const response = await api.get('pokemon')
-    const { results } = response.data
+  const fetchPokemons = useCallback(async (query?: string) => {
+    const response = await api.get(`${query ? `pokemon/${query}` : 'pokemon'}`)
 
-    const payloadPokemons = await Promise.all(
-      results.map(async (pokemon: Pokemon) => {
-        const { id, types, images } = await getMoreInfo(String(pokemon.url))
+    let payloadPokemons = []
 
-        return {
-          name: pokemon.name,
-          id,
-          types,
-          images,
-        }
-      }),
-    )
+    if (!query) {
+      const { results } = response.data
+
+      payloadPokemons = await Promise.all(
+        results.map(async (pokemon: Pokemon) => {
+          const response = await api.get(String(pokemon.url))
+          const { id, types, sprites } = response.data
+
+          return {
+            name: pokemon.name,
+            id,
+            types,
+            images: sprites.other.dream_world.front_default,
+          }
+        }),
+      )
+    } else {
+      const { id, name, types, sprites } = response.data
+      payloadPokemons = [
+        { id, name, types, images: sprites.other.dream_world.front_default },
+      ]
+    }
 
     setPokemons(payloadPokemons)
-  }
+  }, [])
 
-  async function getPokemon() {
+  async function getPokemon(pokemonId?: string) {
     const response = await api.get(`pokemon/${pokemonId}`)
 
     const { id, name, types, sprites, abilities, weight, height, stats } =
@@ -98,27 +108,13 @@ export function PokemonsProvider({
   }
 
   useEffect(() => {
-    getAllPokemons()
-
-    if (pokemonId ?? 0) {
-      getPokemon()
-    }
-  }, [])
-
-  async function getMoreInfo(url: string): Promise<Request> {
-    const response = await api.get(url)
-    const images = response.data.sprites.other.dream_world.front_default
-    const { id, types } = response.data
-
-    return {
-      id,
-      types,
-      images,
-    }
-  }
+    fetchPokemons()
+  }, [fetchPokemons])
 
   return (
-    <PokemonsContext.Provider value={{ pokemons, pokemon }}>
+    <PokemonsContext.Provider
+      value={{ pokemons, fetchPokemons, pokemon, getPokemon }}
+    >
       {children}
     </PokemonsContext.Provider>
   )
