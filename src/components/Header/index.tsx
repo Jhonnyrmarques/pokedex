@@ -5,7 +5,9 @@ import * as S from './styles'
 
 import pokball from '../../assets/pokeball.png'
 import { useForm } from 'react-hook-form'
-import { api } from '../../services/api/api'
+
+import { useContext } from 'react'
+import { PokemonsContext } from '../../contexts/PokemonsContext'
 
 const searchFormSchema = z.object({
   query: z.string(),
@@ -14,15 +16,14 @@ const searchFormSchema = z.object({
 type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function Header() {
+  const { fetchPokemons } = useContext(PokemonsContext)
+
   const { register, handleSubmit } = useForm<SearchFormInputs>({
     resolver: zodResolver(searchFormSchema),
   })
 
   async function handleSearchPokemons(data: SearchFormInputs) {
-    const { data: pokemon } = await api.get(
-      `pokemon/${data.query.toLowerCase()}`,
-    )
-    console.log(pokemon)
+    await fetchPokemons(data.query)
   }
 
   return (
