@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { PokemonsContext } from '../../contexts/PokemonsContext'
 
 import * as S from './styles'
@@ -10,7 +10,16 @@ import charmeleon from '../../assets/005.png'
 import charizard from '../../assets/006.png'
 
 export function PokemonDetails() {
-  const { pokemon } = useContext(PokemonsContext)
+  const pokemonID = localStorage.getItem('pokemonId')
+  const { pokemon, getPokemon } = useContext(PokemonsContext)
+
+  const pokemonData = useCallback(async () => {
+    await getPokemon(String(pokemonID))
+  }, [getPokemon, pokemonID])
+
+  useEffect(() => {
+    pokemonData()
+  }, [pokemonData])
 
   const navigate = useNavigate()
 
