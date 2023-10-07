@@ -11,6 +11,18 @@ export const Header = styled.header`
   img {
     height: 3.125rem;
   }
+
+  @media (min-width: 300px) {
+    img {
+      display: none;
+    }
+  }
+
+  @media (min-width: 500px) {
+    img {
+      display: block;
+    }
+  }
 `
 
 export const Logo = styled.div`
@@ -20,6 +32,18 @@ export const Logo = styled.div`
   span {
     color: ${(props) => props.theme['yellow-400']};
     font-size: 1.4rem;
+  }
+
+  @media (min-width: 300px) {
+    span {
+      display: none;
+    }
+  }
+
+  @media (min-width: 590px) {
+    span {
+      display: block;
+    }
   }
 `
 
