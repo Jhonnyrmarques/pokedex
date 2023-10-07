@@ -23,7 +23,10 @@ export function Gallery() {
             <S.PokemonCard key={item.id} onClick={() => getPokemonId(item.id)}>
               <Link to="/details">
                 <S.Gallery>
-                  <img src={item.images} alt="" />
+                  <img
+                    src={item.images}
+                    alt={`imgagem do pokémon ${item.name}`}
+                  />
                   <span className="number">
                     Nº {item.id.toString().padStart(4, '0')}
                   </span>
